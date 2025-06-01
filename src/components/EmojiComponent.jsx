@@ -1,26 +1,28 @@
-import EmojiPicker, { Emoji } from "emoji-picker-react"
+import EmojiPicker from "emoji-picker-react"
 import { useState } from "react"
 import { ToastContainer, toast } from "react-toastify"
+import "./style.css"
 
 export default function EmojiComponent() {
   // STATE LOGIC
   const [choosenEmoji, setChoosenEmoji] = useState("");
 
   // HANDLERS
-  const copyEmojiFn = (text) => {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand("copy");
-    document.body.removeChild(textArea);
+  const copyEmojiFn = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
   }
 
+  // picks emoji & copies to clipboard
   const emojiPickerFn = (emojiObj) => {
+    console.log(emojiObj);
     const emoji = emojiObj.emoji;
     setChoosenEmoji(emoji);
     copyEmojiFn(emoji);
-    toast.success("Copied the emoji to clipboard", {
+    toast.success("Copied emoji to clipboard", {
       position: 'top-right',
       autoClose: 2000,
       hideProgressBar: true,
@@ -33,14 +35,14 @@ export default function EmojiComponent() {
 
   return (
     <>
-      <div className="emoji-app">
+      <div className="emoji-app" >
         <h1>Emoji Picker App</h1>
-        {0 && <div className="aelected-emoji">
-          <p>Selected Emoji:</p>
-          <span>{0}</span>
+        {choosenEmoji && <div className="selected-emoji">
+          <p>Selected Emoji: <span>{choosenEmoji}</span> </p>
         </div>}
-        <div className="emoji-picker">
-          <EmojiPicker onEmojiClick={0} />
+
+        <div className="emoji-picker" style={{ display: "flex", justifyContent: "center" }}>
+          <EmojiPicker onEmojiClick={emojiPickerFn} />
         </div>
         <ToastContainer />
       </div>

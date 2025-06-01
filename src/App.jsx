@@ -8,9 +8,7 @@ function App() {
 
   return (
     <>
-      <div>
-        Iam APP
-      </div>
+
       <EmojiComponent />
 
     </>
